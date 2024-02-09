@@ -16,7 +16,8 @@ std::vector<std::string> PostScriptFileSimplifier::read_file(std::vector<std::st
 }
 
 void PostScriptFileSimplifier::simplifyFile(std::vector<std::string> store_file){
-    int x, y, ans;
+    int num1, num2, ans;
+    std::cout<<num1<<" "<<num2<<" "<<ans;
     // Create and open a text files
     std::ofstream MyFile("test-output\\file-1-simplified.ps");
     for (int i = 0; i < store_file.size(); i++){
@@ -25,30 +26,30 @@ void PostScriptFileSimplifier::simplifyFile(std::vector<std::string> store_file)
         }
         else if (isdigit(store_file[i][0]) == true){
             psfs.stack1.push_back(std::stoi(store_file[i]));
-            std::cout<< " string " << store_file[i] << " num " << std::stoi(store_file[i]);
+            // std::cout<< " string " << store_file[i] << " num " << std::stoi(store_file[i]);
         }
         else if (isdigit(store_file[i][0]) == false && stack1.empty() != false){
             while(stack1.empty() == false){
-                y = psfs.stack1[psfs.stack1.size()];
+                num2 = psfs.stack1[psfs.stack1.size()];
                 psfs.stack1.pop_back();
-                x = psfs.stack1[psfs.stack1.size()];
+                num1 = psfs.stack1[psfs.stack1.size()];
                 psfs.stack1.pop_back();
             }
             if (store_file[i] == "add"){
-                ans = x+y;
+                ans = num1+num2;
                 MyFile << ans << " ";
             }
             else if (store_file[i] == "sub"){
-                ans = x-y;
+                ans = num1-num2;
                 MyFile << ans << " ";
             }
             else if (store_file[i] == "mul"){
-                ans = x*y;
+                ans = num1*num2;
                 MyFile << ans << " ";
             }
             else{
-                MyFile << x << " ";
-                MyFile << y << " ";
+                MyFile << num1 << " ";
+                MyFile << num2 << " ";
                 MyFile << store_file[i] << " ";
             }
         }  
