@@ -1,11 +1,6 @@
 #include "PostScriptFileSimplifier.hpp"
 
 PostScriptFileSimplifier psfs;
-// StackPostscript<int> sps;
-
-// int PostScriptFileSimplifier::pop(std::vector<int> stack1){
-//     return stack1[stack1.size()];
-// }
 
 std::vector<std::string> PostScriptFileSimplifier::read_file(std::vector<std::string> store_file){
     std::ifstream myfile;
@@ -21,36 +16,42 @@ std::vector<std::string> PostScriptFileSimplifier::read_file(std::vector<std::st
 }
 
 void PostScriptFileSimplifier::simplifyFile(std::vector<std::string> store_file){
+    int x, y, ans;
     // Create and open a text files
     std::ofstream MyFile("test-output\\file-1-simplified.ps");
-   
-
     for (int i = 0; i < store_file.size(); i++){
-        // Write to the file
-        int ans, x, y; //iska int hona zaroori nahi hai float bhi ho sakta hai depending on ke stack mein kia hai
-        if(store_file[i] == "add" || store_file[i] == "sub" || store_file[i] == "div" || store_file[i] == "mul"){
-            x = psfs.stack1[psfs.stack1.size()];
-            psfs.stack1.pop_back();
-            y = psfs.stack1[psfs.stack1.size()];
-            psfs.stack1.pop_back();
-            
+        if (isdigit(store_file[i][0]) == false && psfs.stack1.empty() == true){
+            MyFile << store_file[i] << " ";
+        }
+        else if (isdigit(store_file[i][0]) == true){
+            psfs.stack1.push_back(std::stoi(store_file[i]));
+            std::cout<< " string " << store_file[i] << " num " << std::stoi(store_file[i]);
+        }
+        else if (isdigit(store_file[i][0]) == false && stack1.empty() != false){
+            while(stack1.empty() == false){
+                y = psfs.stack1[psfs.stack1.size()];
+                psfs.stack1.pop_back();
+                x = psfs.stack1[psfs.stack1.size()];
+                psfs.stack1.pop_back();
+            }
             if (store_file[i] == "add"){
                 ans = x+y;
+                MyFile << ans << " ";
             }
             else if (store_file[i] == "sub"){
                 ans = x-y;
+                MyFile << ans << " ";
             }
             else if (store_file[i] == "mul"){
                 ans = x*y;
+                MyFile << ans << " ";
             }
-            else if (store_file[i] == "div"){
-                ans = x/y;
+            else{
+                MyFile << x << " ";
+                MyFile << y << " ";
+                MyFile << store_file[i] << " ";
             }
-        }
-        // if(isdigit(store_file[i])){
-        //     num = std::stoi(store_file[i]);
-        // }
-        MyFile << store_file[i] << " ";
+        }  
     }
     MyFile.close();
 }
