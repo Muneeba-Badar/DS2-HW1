@@ -1,11 +1,11 @@
 #include "PostScriptFileSimplifier.hpp"
 
 PostScriptFileSimplifier psfs;
-StackPostscript<int> sps;
+// StackPostscript<int> sps;
 
-int PostScriptFileSimplifier::pop(std::vector<int> stack1){
-    return stack1[stack1.size()];
-}
+// int PostScriptFileSimplifier::pop(std::vector<int> stack1){
+//     return stack1[stack1.size()];
+// }
 
 std::vector<std::string> PostScriptFileSimplifier::read_file(std::vector<std::string> store_file){
     std::ifstream myfile;
@@ -27,24 +27,24 @@ void PostScriptFileSimplifier::simplifyFile(std::vector<std::string> store_file)
 
     for (int i = 0; i < store_file.size(); i++){
         // Write to the file
-        int x, y; //iska int hona zaroori nahi hai float bhi ho sakta hai depending on ke stack mein kia hai
+        int ans, x, y; //iska int hona zaroori nahi hai float bhi ho sakta hai depending on ke stack mein kia hai
         if(store_file[i] == "add" || store_file[i] == "sub" || store_file[i] == "div" || store_file[i] == "mul"){
-            // x = psfs.stack1[psfs.stack1.size()];
-            // y = psfs.stack1[psfs.stack1.size()];
-            x = psfs.pop(psfs.stack1);
-            y = psfs.pop(psfs.stack1);
+            x = psfs.stack1[psfs.stack1.size()];
+            psfs.stack1.pop_back();
+            y = psfs.stack1[psfs.stack1.size()];
+            psfs.stack1.pop_back();
             
             if (store_file[i] == "add"){
-                sps.add(x,y);
+                ans = x+y;
             }
             else if (store_file[i] == "sub"){
-                sps.sub(x,y);
+                ans = x-y;
             }
             else if (store_file[i] == "mul"){
-                sps.mul(x,y);
+                ans = x*y;
             }
             else if (store_file[i] == "div"){
-                sps.div(x,y);
+                ans = x/y;
             }
         }
         // if(isdigit(store_file[i])){

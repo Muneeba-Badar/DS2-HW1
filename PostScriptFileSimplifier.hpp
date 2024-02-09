@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "StackPostscript.hpp"
+// #include "StackPostscript.hpp"
 
 
 class PostScriptFileSimplifier{
@@ -16,7 +16,7 @@ class PostScriptFileSimplifier{
 
         std::vector<std::string> read_file(std::vector<std::string> store_file); //function that reads the files
         void simplifyFile(std::vector<std::string> store_file);
-        int pop(std::vector<int> stack1);
+        // int pop(std::vector<int> stack1);
 };
 
 /*
