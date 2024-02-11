@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <cmath>
@@ -19,6 +20,4 @@ class PostScriptFileSimplifier{
 
         vector<string> read_file(vector<string>& store_file);
         void simplifyFile(vector<string>& store_file);
-
-        // int pop(vector<int> stack1);
 };

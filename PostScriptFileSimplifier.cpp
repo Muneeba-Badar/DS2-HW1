@@ -2,27 +2,18 @@
 
 PostScriptFileSimplifier psfs;
 
-string strip(const string& str) {
-    size_t start = str.find_first_not_of(" \t\n\r");
-    size_t end = str.find_last_not_of(" \t\n\r");
-    
-    if (start == string::npos || end == string::npos)
-        return ""; // String only contains whitespace
-    cout<<str.substr(start, end - start + 1);
-    return str.substr(start, end - start + 1);
-}
-
 vector<string> PostScriptFileSimplifier::read_file(vector<string>& store_file){
     ifstream myfile;
-    myfile.open("input\\file-1.ps"); //open the first file
+    myfile.open("input\\file-2.eps"); //open the first file
 
-    while(myfile >> psfs.file_word){ //pushes into the vector till file ends
-        store_file.push_back(psfs.file_word);
-    }
-
+        while(myfile >> psfs.file_word)
+        {
+            psfs.store_file.push_back(psfs.file_word); //pushes each element into the vector
+        }
+    
     myfile.close(); //close the file
 
-    return store_file;
+    return psfs.store_file;
 }
 
 void PostScriptFileSimplifier::simplifyFile(vector<string>& store_file){
@@ -30,9 +21,8 @@ void PostScriptFileSimplifier::simplifyFile(vector<string>& store_file){
     string lineToWrite, lineToWrite2;
     
     // Create and open a text files
-    ofstream MyFile("test-output\\file-1-simplified.ps");
-
-    for (int i = 0; i < store_file.size(); i++) //iterates over the entire vector which stores which stores each element of the file
+    ofstream MyFile("test-output\\file-2-simplified.eps");
+    for (int i = 0; i < psfs.store_file.size(); i++) //iterates over the entire vector which stores which stores each element of the file
     {
         if(isdigit(store_file[i][0])) //if the element is a digit push it into stack1
         {
@@ -41,18 +31,21 @@ void PostScriptFileSimplifier::simplifyFile(vector<string>& store_file){
         }
         else //if element is not a digit
         {
-            if (psfs.stack1.size() >= 2) //if more than 2 numbers in stack1
+            if (psfs.stack1.size() >= 2) //if 2 ore more numbers in stack1
             {
-                if(store_file[i] == "add")
+                if(store_file[i] == "add") //if the next element is add 
                 {
-                    num1 = psfs.stack1.back();
+                    //pop the last 2 elements from the stack
+                    num1 = psfs.stack1.back(); 
                     psfs.stack1.pop_back();
                     num2 = psfs.stack1.back();
                     psfs.stack1.pop_back();
+                    //string created to write in the file
                     lineToWrite = to_string(num2+num1) + " ";
                 }
-                else if(store_file[i] == "sub")
+                else if(store_file[i] == "sub") //if the next element is sub
                 {
+                    //pop the last 2 elements from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     num2 = psfs.stack1.back();
@@ -60,32 +53,36 @@ void PostScriptFileSimplifier::simplifyFile(vector<string>& store_file){
                     lineToWrite = to_string(num2-num1) + " ";
                 }
                 
-                else if(store_file[i] == "mul")
+                else if(store_file[i] == "mul") //if the next element is mul
                 {
+                    //pop the last 2 elements from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     num2 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     lineToWrite = to_string(num2*num1) + " ";
                 }
-                else if(store_file[i] == "div")
+                else if(store_file[i] == "div") //if the next element is div
                 {
+                    //pop the last 2 elements from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     num2 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     lineToWrite = to_string(num2/num1) + " ";
                 }
-                else if(store_file[i] == "exch")
+                else if(store_file[i] == "exch") //if the next element is echage
                 {
+                    //pop the last 2 elements from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     num2 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     lineToWrite = to_string(num2) + " " +to_string(num1) + " ";
                 }
-                else if(store_file[i] == "mod")
+                else if(store_file[i] == "mod") //if the next element is mod
                 {
+                    //pop the last 2 elements from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     num2 = psfs.stack1.back();
@@ -94,6 +91,7 @@ void PostScriptFileSimplifier::simplifyFile(vector<string>& store_file){
                 }
                 else
                 {
+                    //pop the last 2 elements from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     num2 = psfs.stack1.back();
@@ -109,50 +107,56 @@ void PostScriptFileSimplifier::simplifyFile(vector<string>& store_file){
                     num3 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     lineToWrite2 = to_string(num3) + " " + lineToWrite;
-                    MyFile << lineToWrite2;
+                    MyFile << lineToWrite2; //writes in the file
                 }
             }
-            else if (psfs.stack1.size() == 1)
+            else if (psfs.stack1.size() == 1) //if 1 numbers in stack1
             {
-                if(store_file[i] == "sqrt")
+                if(store_file[i] == "sqrt") //if the next element is sqrt
                 {
+                    //pop the last element from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     lineToWrite = to_string(sqrt(num1)) + " ";
                 }
-                else if(store_file[i] == "exp")
+                else if(store_file[i] == "exp") //if the next element is exp
                 {
+                    //pop the last element from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     lineToWrite = to_string(exp(num1)) + " ";
                 }
-                else if(store_file[i] == "dup")
+                else if(store_file[i] == "dup") //if the next element is duplicate
                 {
+                    //pop the last element from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     lineToWrite = to_string(num1) + " " + to_string(num1) + " ";
                 }
-                else if(store_file[i] == "cos")
+                else if(store_file[i] == "cos") //if the next element is cos
                 {
+                    //pop the last element from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     lineToWrite = to_string(cos(num1)) + " ";
                 }
-                else if(store_file[i] == "sin")
+                else if(store_file[i] == "sin") //if the next element is sin
                 {
+                    //pop the last element from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     lineToWrite = to_string(sin(num1)) + " ";
                 }
                 else
                 {
+                    //pop the last element from the stack
                     num1 = psfs.stack1.back();
                     psfs.stack1.pop_back();
                     lineToWrite =  to_string(num1) + " " + store_file[i] + '\n';
                 }
                 MyFile << lineToWrite; //writes in the file
             }
-            else
+            else //if stack is empty directly write it in the file
             {
                 MyFile << store_file[i] << '\n'; //writes in the file
             }      
